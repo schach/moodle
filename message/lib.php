@@ -2785,8 +2785,11 @@ function message_get_messages($useridto, $useridfrom = 0, $notifications = -1, $
     if (empty($useridto)) {
         $userfields = get_all_user_name_fields(true, 'u', '', 'userto');
         $joinsql = "JOIN {user} u ON u.id = mr.useridto";
-        $usersql = "mr.useridfrom = :useridfrom AND u.deleted = :deleted";
-        $params['useridfrom'] = $useridfrom;
+        $usersql = "u.deleted = :deleted";
+        if (!empty($useridfrom)) {
+            $usersql .= " AND mr.useridfrom = :useridfrom";
+            $params['useridfrom'] = $useridfrom;
+        }
     } else {
         $userfields = get_all_user_name_fields(true, 'u', '', 'userfrom');
         // Left join because useridfrom may be -10 or -20 (no-reply and support users).
